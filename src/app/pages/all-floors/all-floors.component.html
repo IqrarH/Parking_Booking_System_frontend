@@ -1,0 +1,26 @@
+<div>
+    <table class="table table-dark table-hover">
+      <thead>
+          <tr>
+            <th scope="col">Floor Number</th>
+            <th scope="col">Total Spots</th>
+            <th scope="col">Actions</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let row of floorData">
+            <td>{{row.floorNumber}}</td>
+            <td>{{25}}</td>
+            <td>
+              <button (click)="checkSpots(row)" class="btn btn-warning mx-3">Check Spots</button>
+          </td>
+          </tr>
+      </tbody>
+    </table>
+    <ngb-pagination
+    class="d-flex mr-4 justify-content-end"
+    (pageChange)="onPageChange($event)"
+    [collectionSize]="totalRecords"
+    [(page)]="page"
+    ></ngb-pagination>    
+</div>

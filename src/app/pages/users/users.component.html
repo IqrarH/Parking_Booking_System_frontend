@@ -1,0 +1,214 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container-fluid">
+      <h1 class="navbar-brand">Welcome To PBS <span style="color:gold; font-style: italic;">{{user.name}}</span></h1>
+     
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a style="margin: 15px; align-items: center;" data-bs-toggle="modal" data-bs-target="#vehicleModal"
+             class="btn btn-info">Add Vehicle</a>
+          </li>
+          <li class="nav-item">
+            <a style="margin: 15px; align-items: center;" class="btn btn-info" data-bs-toggle="modal" 
+             data-bs-target="#bookingModal" >Add Booking</a>
+          </li>
+          <li class="nav-item">
+            <a style="margin: 15px; align-items: center;" class="btn btn-info" [routerLink]="['/booking']">View Booking</a>
+          </li>
+          <li class="nav-item">
+            <a style="margin: 15px; align-items: center;" class="btn btn-primary" [routerLink]="['/checkout']" >Checkout</a>
+          </li>
+          <li class="nav-item">
+            <a style="margin: 15px; align-items: center;"  class="btn btn-warning"
+            (click)="_authService.logout()">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4" *ngIf="user.role === 0">
+  <div class="container-fluid">
+    <div>
+      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a style="margin: 15px; align-items: center;" data-bs-toggle="modal" data-bs-target="#floorModal"
+           class="btn btn-primary">Add Floor</a>
+        </li>
+        <li class="nav-item">
+          <a style="margin: 15px; align-items: center;" data-bs-toggle="modal" data-bs-target="#userModal"
+           class="btn btn-primary">Add Admin</a>
+        </li>
+        <li class="nav-item">
+          <a style="margin: 15px; align-items: center;" class="btn btn-primary" [routerLink]="['/allBookings']">
+            View All Bookings</a>
+        </li>
+        <li class="nav-item">
+          <a style="margin: 15px; align-items: center;" class="btn btn-primary" [routerLink]="['/allVehicles']">
+            View All Vehicles</a>
+        </li>
+        <li class="nav-item">
+          <a style="margin: 15px; align-items: center;" class="btn btn-primary" [routerLink]="['/allFloors']">
+            View All Floors</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div *ngIf="user.role === 0">
+  <table class="table table-dark table-hover" *ngIf="user.role === 0">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of userData  | paginate: {id:'listing_pagination', itemsPerPage: 15, currentPage: page, totalItems: totalRecords }">
+            <td>{{row.name}}</td>
+            <td>{{row.email}}</td>
+            <td *ngIf="row.role === 0">{{"Admin"}}</td>
+            <td *ngIf="row.role === 1">{{"User"}}</td>
+        </tr>
+    </tbody>
+  </table>
+  <pagination-controls id="listing_pagination" (pageChange)="page = $event"></pagination-controls>
+</div>
+
+
+<!--Vehicle Modal -->
+<div class="modal fade" id="vehicleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Vehicle</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="vehicleForm">
+                <div class="mb-3">
+                  <label class="form-label">Owner Email</label>
+                  <input type="email" formControlName="ownerEmail" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Vehicle Number</label>
+                  <input type="text" formControlName="vehicleNumber" class="form-control">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button"  (click)="postVehicleDetails()" class="btn btn-primary">Add</button>
+          <!-- <button type="button"  (click)="updateEmployeeDetails()" class="btn btn-primary">Update</button> -->
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<!--Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Booking</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="bookingForm">
+                <div class="mb-3">
+                  <label class="form-label">Owner Email</label>
+                  <input type="email" formControlName="ownerEmail" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Vehicle Number</label>
+                  <input type="text" formControlName="vehicleNumber" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Booking Time</label>
+                    <input type="datetime-local" formControlName="bookingTime" class="form-control">
+                  </div>
+                <div class="mb-3">
+                    <label class="form-label">Booking Duration (In Hours)</label>
+                    <input type="number" min="1" formControlName="bookingDuartion" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Floor</label>
+                    <input type="number" min="0" max="21" formControlName="floorNumber" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Spot No.</label>
+                    <input type="number" min="1" max="25" formControlName="spotNo" class="form-control">
+                  </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button"  (click)="postBookingDetails()" class="btn btn-primary">Add</button>
+          <!-- <button type="button"  (click)="updateEmployeeDetails()" class="btn btn-primary">Update</button> -->
+        </div>
+      </div>
+    </div>
+</div>
+
+
+<!--Floor Modal -->
+<div class="modal fade" id="floorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New Floor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form [formGroup]="floorForm">
+              <div class="mb-3">
+                <label class="form-label">Floor Number</label>
+                <input type="number" min="0" formControlName="floorNumber" class="form-control">
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button"  (click)="postFloorDetails()" class="btn btn-primary">Add</button>
+        <!-- <button type="button"  (click)="updateEmployeeDetails()" class="btn btn-primary">Update</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--User Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <form [formGroup]="userForm">
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" formControlName="name" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" formControlName="email" class="form-control">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" formControlName="password" class="form-control">
+              </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button"  (click)="postUserDetails()" class="btn btn-primary">Add</button>
+        <!-- <button type="button"  (click)="updateEmployeeDetails()" class="btn btn-primary">Update</button> -->
+      </div>
+    </div>
+  </div>
+</div>

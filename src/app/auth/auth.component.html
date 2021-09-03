@@ -1,0 +1,22 @@
+<main class="form-signin">
+    <form [formGroup]="form" (ngSubmit)="submitForm()">
+      <h1 class="h3 mb-3 fw-normal">WELCOME TO PBS!</h1>
+      <div class="input-field" *ngIf="f.name">
+        <input formControlName="name" type="text" class="form-control custom-border" placeholder="Name" />
+      </div>
+      <div class="form-floating">
+        <input formControlName="email" type="email" class="form-control">
+        <label for="floatingInput">Email address</label>
+      </div>
+      <div class="form-floating">
+        <input formControlName="password" type="password" class="form-control">
+        <label for="floatingPassword">Password</label>
+      </div>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit">{{ isLogin ? "Log In" : "Sign Up"}}</button>
+      <span>OR </span>
+      <a href="javascript:void(0)" class="main-color" [routerLink]="['/auth', isLogin ? 'register' : 'login']">{{ isLogin ? "Sign Up" : "Log In" }}</a>
+      <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+    </form>
+</main>
+  

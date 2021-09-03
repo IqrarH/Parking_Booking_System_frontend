@@ -1,0 +1,33 @@
+<div>
+    <table class="table table-dark table-hover">
+      <thead>
+          <tr>
+              <th scope="col">Vehicle Number</th>
+              <th scope="col">Booked By</th>
+              <th scope="col">Starting Time</th>
+              <th scope="col">Duration(In Hours)</th>
+              <th scope="col">Floor</th>
+              <th scope="col">Spot</th>
+              <th scope="col">Active</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let row of bookingData">
+              <td>{{row.vehicle.vehicleNumber}}</td>
+              <td>{{row.user.name}}</td>
+              <td>{{row.startingTime | date:'medium'}}</td>
+              <td>{{row.bookingDuration}}</td>
+              <td>{{row.floor.floorNumber}}</td>
+              <td>{{row.bookedSpot}}</td>
+              <td *ngIf="row.isActive">{{"Yes"}}</td>
+              <td *ngIf="!row.isActive">{{"No"}}</td>
+          </tr>
+      </tbody>
+    </table>
+    <ngb-pagination
+    class="d-flex mr-4 justify-content-end"
+    (pageChange)="onPageChange($event)"
+    [collectionSize]="totalRecords"
+    [(page)]="page"
+  ></ngb-pagination>    
+</div>
