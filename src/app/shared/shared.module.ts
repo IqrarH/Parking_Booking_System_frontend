@@ -10,8 +10,9 @@ import { WelcomeComponent } from './welcome/welcome.component';
   ],
   imports: [
     CommonModule,
-
-
+  ],
+  exports: [
+    WelcomeComponent
   ]
 })
 export class SharedModule { }

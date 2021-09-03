@@ -20,8 +20,6 @@ import { AllVehiclesComponent } from './pages/all-vehicles/all-vehicles.componen
   declarations: [
     AppComponent,
     HomeComponent,
-    AllBookingsComponent,
-    AllVehiclesComponent,
   ],
   imports: [
     NgbModule,
